@@ -1,0 +1,35 @@
+{% load static %}
+{% include 'user/simpleheader.html' %}
+
+<div class="container mt-5  ">
+    <div class="card mx-auto" style="max-width: 400px;">
+        <div class="card-header bg-dark text-white text-center">
+            <h4>Login</h4>
+        </div>
+        <div class="card-body bg-light">
+            {% if messages %}
+            <div class="container mt-2">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="loginEmail" class="form-label">Email Or Mobile</label>
+                    <input type="text" class="form-control" id="loginEormo" name="eormo" required>
+                </div>
+                <div class="mb-3">
+                    <label for="loginPassword" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="loginPassword" name="password" required maxlength="6">
+                </div>
+                <button type="submit" class="btn btn-dark w-75  mx-auto d-block">Login</button>
+            </form>
+            <div class="text-center mt-3">
+                <a href="{% url 'register' %}" class="btn btn-light w-50">Don't have an account?
+                    Register</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,51 @@
+{% load static %}
+{% include 'user/header.html' %}
+<!-- ******************************************************** -->
+
+{% if messages %}
+<script>
+  {% for message in messages %}
+  alert('{{ message }}')
+  {% endfor %}
+</script>
+{% endif %}
+
+
+<div class="container text-center mt-3">
+  <!-- *************************************************************************************************** -->
+<section id="products" class="py-5 bg-light">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2>Our Products</h2>
+      <p>Explore our latest collection of products</p>
+    </div>
+
+    <div class="row">
+      {% for product in products %}
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm d-flex flex-column">
+
+          <img src="{{ MEDIA_URL }}{{ product.product_image }}" class="card-img-top" style="height: 250px; object-fit: cover;" alt="{{ product.product_name }}">
+
+          <div class="card-body d-flex flex-column justify-content-between text-center">
+            <h5 class="card-title fs-5">{{ product.product_name }}</h5>
+
+            <p class="card-text text-muted small">
+              {{ product.product_description|truncatewords:15 }}
+            </p>
+
+            <p class="card-text fs-5 mt-auto  text-start">
+              Price: <i class="fa-solid fa-indian-rupee-sign"></i> {{ product.product_price }}
+            </p>
+
+            <div class="mt-3">
+              <a href="{% url 'viewproduct' product.id %}" class="btn btn-dark w-100">View Product</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+</div>

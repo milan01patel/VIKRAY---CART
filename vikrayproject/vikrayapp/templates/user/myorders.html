@@ -1,0 +1,37 @@
+{% load static %}
+{% include 'user/header.html' %}
+
+{% if messages %}
+<script>
+  {% for message in messages %}
+  alert('{{ message }}')
+  {% endfor %}
+</script>
+{% endif %}
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">YOUR ORDERS</h2>
+
+  {% if orders %}
+    <div class="list-group">
+      {% for order in orders %}
+        <div class="list-group-item d-flex justify-content-start align-items-center flex-column flex-md-row">
+
+          <img src="{{ MEDIA_URL }}{{ order.product_image }}" alt="Product Image" class="product-img mb-3 mb-md-0" 
+               width="100" height="100" style="object-fit: cover;">
+
+          <div class="ms-md-3">
+            <h5 class="mb-1">{{ order.product_name }}</h5>
+            <small>Price: <i class="fa-solid fa-indian-rupee-sign"></i> {{ order.product_price }}</small>
+          </div>
+
+          <a href="{% url 'deletemyorder' order.id %}" class="btn btn-lg ms-md-auto mt-3 mt-md-0 text-danger "
+             onclick="return confirm('Are you sure you want to cancle this order?');" title="CANCLE ORDER">
+            <i class="fa-solid fa-xmark"></i>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-center">No products found.</p>
+  {% endif %}
+</div>

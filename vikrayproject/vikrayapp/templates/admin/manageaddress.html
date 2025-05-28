@@ -1,0 +1,42 @@
+{% load static %}
+{% include 'admin/adminheader.html' %}
+
+{% if messages %}
+<script>
+  {% for message in messages %}
+  alert('{{ message }}')
+  {% endfor %}
+</script>
+{% endif %}
+
+<div class="container mt-4">
+  <h2 class="mb-3">Addresses</h2>
+
+  <!-- Responsive Table -->
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped text-center">
+      <thead class="table-dark">
+        <tr>
+          <th>Id</th>
+          <th>USER EMAIL</th>
+          <th>HOUSE NO.</th>
+          <th>STREET</th>
+          <th>CITY</th>
+          <th>STATE</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for address in addresses %}
+        <tr>
+          <td> {{ forloop.counter }} </td>
+          <td> {{ address.user_email}} </td>
+          <td> {{ address.housenumber }} </td>
+          <td> {{ address.street }} </td>
+          <td> {{ address.city }} </td>
+          <td> {{ address.state }} </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

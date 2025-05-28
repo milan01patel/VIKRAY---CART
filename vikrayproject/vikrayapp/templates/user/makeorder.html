@@ -1,0 +1,10 @@
+{% load static %}
+{% include 'user/header.html' %}
+
+{% if messages %}
+<script>
+    {% for message in messages %}
+    alert('{{ message }}')
+    {% endfor %}
+</script>
+{% endif %}

@@ -1,0 +1,37 @@
+{% load static %}
+{% include 'admin/adminheader.html' %}
+{% if messages %}
+  <script>
+    {% for message in messages %}
+      alert('{{ message }}')
+    {% endfor %}
+  </script>
+{% endif %}
+
+<div class="container mt-5">
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white">
+                <h3 class="m-3">About the Admin Dashboard</h3>
+            </div>
+            <div class="card-body p-5">
+                <p>
+                    The Admin Dashboard is the backend control center of the e-commerce platform, accessible only after the admin logs in.
+                    It allows the admin to efficiently manage all aspects of the website and business operations from a single interface.
+                </p>
+                <h5>Key Features:</h5>
+                <ul>
+                    <li>Adding and managing product listings</li>
+                    <li>Managing customer details and orders</li>
+                    <li>Viewing and managing customer contact messages</li>
+                    <li>Viewing real-time shopping cart contents</li>
+                    <li>Viewing detailed order information</li>
+                    <li>Viewing user shipping and billing addresses</li>
+
+                </ul>
+                <p>
+                    The primary goal of this dashboard is to streamline site management, enhance efficiency,
+                    and ensure a smooth shopping experience for customers while supporting the growth of the business.
+                </p>
+            </div>
+        </div>
+    </div>

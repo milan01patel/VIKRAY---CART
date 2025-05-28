@@ -1,0 +1,89 @@
+{% load static %}
+{% include 'user/header.html' %}
+
+{% if messages %}
+<script>
+    {% for message in messages %}
+    alert('{{ message }}')
+    {% endfor %}
+</script>
+{% endif %}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Checkout</h2>
+
+    <form method="POST" action="{% url 'makeorder' %}">
+        {% csrf_token %}
+
+        <div class="card shadow-sm p-4 mb-4">
+            <h5 class="mb-3">Select Payment Method</h5>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="payment_method" id="cod" value="cod" checked>
+                <label class="form-check-label" for="cod">Cash on Delivery</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="payment_method" id="online" value="online">
+                <label class="form-check-label" for="online">Online Payment</label>
+            </div>
+        </div>
+
+        <div class="card shadow-sm p-4 mb-4">
+            <h5 class="mb-3">Shipping Address</h5>
+            <div class="mb-3">
+                <label for="house_no" class="form-label">House No.</label>
+                <input type="text" class="form-control" value="{{ address.housenumber }}" name="hn" required>
+            </div>
+            <div class="mb-3">
+                <label for="street" class="form-label">Street</label>
+                <input type="text" class="form-control" value="{{ address.street }}" name="str" required>
+            </div>
+            <div class="mb-3">
+                <label for="city" class="form-label">City</label>
+                <input type="text" class="form-control" value="{{ address.city }}" name="ct" required>
+            </div>
+            <div class="mb-3">
+                <label for="state" class="form-label">State</label>
+                <input type="text" class="form-control" value="{{ address.state }}" name="sta" required>
+            </div>
+        </div>
+
+        <div class="text-center mb-5">
+            <button type="submit" class="btn btn-dark" id="orderBtn">Order
+                Now</button>
+            <button type="button" name="submit_button" class="btn btn-dark d-none" id="payBtn" data-bs-toggle="modal"
+                data-bs-target="#qrModal">Pay Now</button>
+        </div>
+
+        <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content text-center">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="qrModalLabel">Scan to Pay</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <img src="{% static 'image/qrcode.png' %}" class="img-fluid" alt="QR Code"
+                            style="max-width: 300px;">
+                        <p class="mt-3">Scan this code with any UPI app to complete payment.</p>
+                    </div>
+                    <button type="submit" class="btn btn-dark" id="orderBtn">Order Now</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    document.querySelectorAll('input[name="payment_method"]').forEach(function (elem) {
+        elem.addEventListener("change", function () {
+            if (this.value === "cod") {
+                document.getElementById("orderBtn").classList.remove("d-none");
+                document.getElementById("payBtn").classList.add("d-none");
+            } else {
+                document.getElementById("orderBtn").classList.add("d-none");
+                document.getElementById("payBtn").classList.remove("d-none");
+            }
+        });
+    });
+</script>

@@ -1,0 +1,78 @@
+{% load static %}
+{% include 'user/simpleheader.html' %}
+<div class="container mt-4">
+    <div class="card mx-auto" style="max-width: 500px;">
+        <div class="card-header bg-dark text-white text-center">
+            <h4>Register</h4>
+        </div>
+        <div class="card-body bg-light" enctype="multipart/form-data">
+            {% if messages %}
+            <div class="mb-3">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="firstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="firstName" name="fname" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="lastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" name="lname" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="regEmail" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="regEmail" name="em" required>
+                </div>
+                <div class="mb-3">
+                    <label for="regMobile" class="form-label">Mobile Number</label>
+                    <input type="tel" class="form-control" id="regMobile" name="mob" required pattern="[0-9]{10}"
+                        maxlength="10">
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="regPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="regPassword" name="pass" required
+                            pattern="[0-9]{6}" maxlength="6" minlength="6">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="regConfirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="regConfirmPassword" name="cpass" required
+                            pattern="[0-9]{6}" maxlength="6" minlength="6">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <label for="regName" class="form-label">Home No.</label>
+                        <input type="text" class="form-control" id="regName" name="hn" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="regStreet" class="form-label">Street</label>
+                        <input type="text" class="form-control" id="regStreet" name="str" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="regCity" class="form-label">City</label>
+                        <input type="text" class="form-control" id="regCity" name="ct" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="regState" class="form-label">State</label>
+                        <input type="text" class="form-control" id="regState" name="stt" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-dark w-75  mx-auto d-block">Register</button>
+            </form>
+            <div class="text-center mt-3">
+                <a href="{% url 'login' %}" class="btn btn-light w-75">Do You have an account? LOGIN</a>
+            </div>
+        </div>
+    </div>
+</div>

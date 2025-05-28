@@ -1,0 +1,44 @@
+{% load static %}
+{% include 'user/header.html' %}
+<!-- ******************************************************** -->
+
+{% if messages %}
+<script>
+  {% for message in messages %}
+  alert('{{ message }}')
+  {% endfor %}
+</script>
+{% endif %}
+
+<div class="container mt-5">
+  <h2 class="text-center mb-4">VIEW PRODUCT DETAILS</h2>
+  <form method="POST" enctype="multipart/form-data">
+    <div class="card shadow-sm mt-5">
+      <div class="row g-0 align-items-center">
+
+        <div class="col-md-6">
+          <img src="{{ MEDIA_URL }}{{ product.product_image }}" class="img-fluid rounded-start w-100"
+            style="height: 100%; object-fit: cover;" alt="{{ product.product_name }}">
+        </div>
+        <input type="text" value="{{ MEDIA_URL }}{{ product.product_image }}" hidden name="img"> 
+
+        <div class="col-md-6">
+          <div class="card-body">
+            <h3 class="card-title" name="mnm">{{ product.product_name }}</h3>
+
+            <p class="card-text text-muted">
+              {{ product.product_description }}
+            </p>
+
+            <p class="card-text fs-5 text-start">
+              Price: <i class="fa-solid fa-indian-rupee-sign" name="p"></i> {{ product.product_price }}
+            </p>
+
+            <a href="{% url 'addtocart' product.id %}" class="btn btn-dark mt-3 w-100">ADD TO CART</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </form>
+</div>

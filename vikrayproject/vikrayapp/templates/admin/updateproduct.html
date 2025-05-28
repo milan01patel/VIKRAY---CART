@@ -1,0 +1,78 @@
+{% load static %}
+{% include 'admin/adminheader.html' %}
+
+{% if messages %}
+<script>
+    {% for message in messages %}
+    alert('{{ message }}')
+    {% endfor %}
+</script>
+{% endif %}
+
+<div class="container mt-5">
+    <div class="mb-3">
+        <a href="{% url 'manageproduct' %}" class="btn ">
+            ← Back
+        </a>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <h5 class="mb-3 text-center fs-3">UPDATE PRODUCT</h5>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="mb-2">
+                    <label class="form-label">Product Type</label>
+                    <input type="text" class="form-control" name="prdtyp" value="{{ product.product_type }}" readonly>
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label">Product Company</label>
+                    <input type="text" class="form-control" name="prdcomp" value="{{ product.product_company }}"
+                        readonly>
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label">Model Name</label>
+                    <input type="text" class="form-control" name="mnm" value="{{ product.product_name }}" required>
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label">Product Description</label>
+                    <textarea class="form-control" name="des" required>{{ product.product_description }}</textarea>
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label">Price</label>
+                    <input type="text" class="form-control" name="p" value="{{ product.product_price }}"
+                        pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g,'')" required>
+                </div>
+
+                <div class="row mb-4 align-items-end">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Current Image</label><br>
+                         <img
+                        src='{{ MEDIA_URL }}{{ product.product_image }}'
+                        alt="Product Image"
+                        class="product-img"
+                        width="100"
+                        height="100"
+                        name = "img"
+                    />
+                    </div>
+
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Change Image (optional)</label>
+                        <input type="file" class="form-control" name="img" accept="image/*">
+                    </div>
+                </div>
+
+                <div class="d-grid mb-5">
+                    <button type="submit" class="btn btn-dark">Update Product ✎</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
