@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: vikraycart
+    runtime: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn vikrayproject.wsgi:application"
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: vikrayproject.settings
+      - key: DATABASE_URL
+        value: mysql://root:admin@127.0.0.1:3306/vikray

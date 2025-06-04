@@ -3,7 +3,61 @@ from django.contrib import messages
 from django.db import connection
 from django.conf import settings
 import os
+import pandas as pd
+import matplotlib
+matplotlib.use('Agg') 
+import matplotlib.pyplot as plt
+from django.http import HttpResponse
+from io import BytesIO
+import base64
+import matplotlib.cm as cm
+import numpy as np
 
+def analyzeorders(request):
+    if "adminemail" not in request.session:
+        messages.error(request, "Login required.")
+        return redirect("admin")
+
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT product_name, product_price FROM orders")
+        rows = cursor.fetchall()
+
+    if not rows:
+        messages.info(request, "No orders available for analysis.")
+        return redirect("manageorders")
+
+    # Create DataFrame
+    df = pd.DataFrame(rows, columns=["product_name", "product_price"])
+    df["product_price"] = pd.to_numeric(df["product_price"], errors="coerce")
+
+    # Group by product and calculate total sales
+    product_sales = df.groupby("product_name")["product_price"].sum().sort_values(ascending=False)
+
+    # Generate a distinct color for each product
+    colors = cm.Set3(np.linspace(0, 1, len(product_sales)))
+
+    # Plotting
+    fig, ax = plt.subplots(figsize=(10, 6))
+    product_sales.plot(kind="bar", ax=ax, color=colors)
+    ax.set_title("Total Sales per Product")
+    ax.set_xlabel("Product Name")
+    ax.set_ylabel("Total Sales (₹)")
+    ax.set_xticklabels(product_sales.index, rotation=45, ha="right")
+
+    # Save to BytesIO
+    buffer = BytesIO()
+    plt.tight_layout()
+    plt.savefig(buffer, format="png")
+    plt.close(fig)
+    buffer.seek(0)
+
+    image_png = buffer.getvalue()
+    buffer.close()
+
+    # Encode the PNG image
+    graphic = base64.b64encode(image_png).decode("utf-8")
+
+    return render(request, "admin/order_analysis.html", {"chart": graphic})
 
 # Create your views here.
 # ***************************************************************************************************user side
@@ -349,7 +403,6 @@ def admin(request):
                 return redirect("admin")
     return render(request, "admin/admin.html")
 
-
 def a_logout(request):
     if "adminemail" in request.session:
         request.session.flush()
@@ -409,8 +462,7 @@ def addproduct(request):
             image_r_p = ""
             if prdimage:
                 image_path = os.path.join(
-                    settings.MEDIA_ROOT, "products", prdimage.name
-                )
+                    settings.MEDIA_ROOT, "products", prdimage.name)
                 os.makedirs(os.path.dirname(image_path), exist_ok=True)
                 with open(image_path, "wb") as f:
                     for chunk in prdimage.chunks():
@@ -444,18 +496,32 @@ def updateproduct(request, id):
         prdprice = request.POST.get("p")
         prdimage = request.FILES.get("img")
         image_r_p = ""
-        if prdimage:
+        if prdimage:  
             image_path = os.path.join(settings.MEDIA_ROOT, "products", prdimage.name)
             os.makedirs(os.path.dirname(image_path), exist_ok=True)
             with open(image_path, "wb") as f:
                 for chunk in prdimage.chunks():
                     f.write(chunk)
             image_r_p = "/vikrayapp/static/image/products/" + prdimage.name
-        with connection.cursor() as cursor:
-            query = "update products set product_name=%s,product_description=%s,product_price=%s,product_image=%s where id=%s"
-            cursor.execute(query, [prdname, prddescription, prdprice, image_r_p, id])
-            messages.success(request, "PRODUCT UPDATED SUCCESS !")
-            return redirect("manageproduct")
+            with connection.cursor() as cursor:
+                query = """
+                    UPDATE products
+                    SET product_name=%s, product_description=%s, product_price=%s, product_image=%s
+                    WHERE id=%s
+                    """
+                cursor.execute(query, [prdname, prddescription, prdprice, image_r_p, id])
+        else:
+            with connection.cursor() as cursor:
+                query = """
+                    UPDATE products
+                    SET product_name=%s, product_description=%s, product_price=%s
+                    WHERE id=%s
+                    """
+                cursor.execute(query, [prdname, prddescription, prdprice,id])
+                messages.success(request,"product updated success!")
+                return redirect("manageproduct")
+
+
 
     with connection.cursor() as cursor:
         query = "SELECT * FROM products WHERE id=%s"
