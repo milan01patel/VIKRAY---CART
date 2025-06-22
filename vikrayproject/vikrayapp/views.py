@@ -4,8 +4,7 @@ from django.db import connection
 from django.conf import settings
 import os
 import pandas as pd
-import matplotlib
-matplotlib.use('Agg') 
+import matplotlib matplotlib.use('Agg') 
 import matplotlib.pyplot as plt
 from django.http import HttpResponse
 from io import BytesIO
